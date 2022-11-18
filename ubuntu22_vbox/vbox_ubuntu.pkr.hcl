@@ -12,9 +12,6 @@ locals {
 }
 
 source "virtualbox-iso" "basic-example" {
-  export_opts = [
-              "--output", "../../../vbox-images/",
-        ]
   guest_os_type = "Ubuntu_64"
   iso_url = "../../../ISO/ubuntu-22.04.1-live-server-amd64.iso"
   iso_checksum = "md5:E8D2A77C51B599C10651608A5D8C286F"
@@ -59,7 +56,11 @@ source "virtualbox-iso" "basic-example" {
 build {
   sources = ["sources.virtualbox-iso.basic-example"]
   provisioner "shell" {
-    #inline = ["echo hello"]
-    scripts = ["scripts/setup_ubuntu2004.sh"]
+    inline = ["echo hello"]
+    #scripts = ["scripts/setup_ubuntu2004.sh"]
   }
+  post-processor "vagrant" {
+  keep_input_artifact = true
+  provider_override   = "virtualbox"
+}  
 }
